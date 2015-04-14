@@ -13,22 +13,17 @@ import javax.ws.rs.client.ClientBuilder;
 public class CustomKeystoreApp {
 
     public static void main(String[] args) {
+        System.out.println(CustomKeystoreApp.class.getName() + ": Start");
         SslConfigurator sslConfig = SslConfigurator.newInstance()
                 .trustStoreFile("./toolTrustStore.jks")
-                .trustStorePassword("password")
-                .keyStoreFile("./tool.jks")
-                .keyPassword("password");
+                .trustStorePassword("password");
 
         SSLContext sslContext = sslConfig.createSSLContext();
-        SSLSocketFactory socketFactory = (SSLSocketFactory)SSLSocketFactory.getDefault();
-        for (String cipher:socketFactory.getDefaultCipherSuites()) {
-            System.out.println(cipher);
-        }
         Client client = ClientBuilder.newBuilder().sslContext(sslContext).build();
 
         EchoRequest request = new EchoRequest("https://safeavenue-na.f-secure.com", "api/charter/v2.1/echo");
         request.setClient(client);
-        request.initializeClient("charter-api-coopja", "wJcapBbepUDJ6t!", true);
-        request.send("Hello");
+        request.initializeClient("charter-api-coopja", "password", true);
+        request.send("Hello World");
     }
 }

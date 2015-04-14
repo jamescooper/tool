@@ -10,19 +10,33 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class AesApp {
     public static void main(String[] args) {
+        System.out.println(AesApp.class.getName() + ": Start");
         try {
-            SecretKey secret = getSecretKey(256);
-            byte[] encryptedData = encrypt(secret, "Hello, World!".getBytes());
-            System.out.println(encryptedData);
+            SecretKey secret = getSecretKey(getKeySize(args));
+            byte[] encryptedData = encrypt(secret, "Hello World".getBytes());
+            System.out.println("Encrypted Data: " + new String(encryptedData));
             byte[] decryptedData = decrypt(secret, encryptedData);
-            System.out.println(decryptedData);
+            System.out.println("Decrypted Data: " + new String(decryptedData));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            System.out.println(AesApp.class.getName() + ": Finish");
         }
+    }
+
+    private static int getKeySize(String[] args){
+        int keySize = 128;
+        for(int i = 0; i < args.length; i++){
+            if((args[i]).contains("-b")){
+                keySize = Integer.valueOf(args[i+1]);
+                break;
+            }
+        }
+        return keySize;
     }
 
     /**
